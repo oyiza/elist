@@ -6,12 +6,12 @@ import { db } from "../firebase";
 const Category = () => {
     // data from form
     const [categoryName, setCategoryName] = useState("");
+    const [dropdownCategoryName, setdropdownCategoryName] = useState("");
 
     // data from firebase
-    const [categoryNameList, setcategoryNameList] = useState([]);
+    // const [categoryNameList, setcategoryNameList] = useState([]);
     const [categoryList, setcategoryList] = useState([]);
     const [categoryExists, setCategoryExists] = useState(false);
-    const [dropdownCategoryName, setdropdownCategoryName] = useState("");
 
     // TODO: buttons don't work on the first click, and duplicate items get added to the db on first try
     const handleSubmitCategoryForm = (e) => {
@@ -22,8 +22,9 @@ const Category = () => {
             return;
         }
 
-        setcategoryNameList(updateCategoryLists());
-        const temp = categoryNameList.find(element => element["name"] === categoryName);
+        updateCategoryLists();
+        // const temp = categoryNameList.find(element => element["name"] === categoryName);
+        const temp = categoryList.find(element => element["name"] === categoryName);
         setCategoryExists(temp !== undefined);
 
         if (!categoryExists) {
@@ -51,7 +52,6 @@ const Category = () => {
         .get()
         .then(snapshot => {
             snapshot.forEach(doc => {
-                // let data = {}
                 const name = doc.data();
                 const id = doc.id;
                 categoryName.push(name);
@@ -61,11 +61,12 @@ const Category = () => {
         })
         .catch (error => console.log(error));
         
-        console.log("categoryNameAndId below----");
-        console.log(categoryNameAndId);
-        setcategoryNameList(categoryName)
+        // DEBUG
+        // console.log("categoryNameAndId below----");
+        // console.log(categoryNameAndId);
+
+        // setcategoryNameList(categoryName)
         setcategoryList(categoryNameAndId)
-        return categoryName;
     };
 
     const options = [
@@ -85,19 +86,19 @@ const Category = () => {
         setdropdownCategoryName(e.value);
     };
 
-    // debug purposes
+    // DEBUG
     const printCategories = (e) => {
         e.preventDefault();
 
-        setcategoryNameList(updateCategoryLists());
+        updateCategoryLists();
         console.log("printing categoryList...")
         console.log(categoryList)
-        console.log(categoryNameList);
-        categoryNameList.forEach(category => {
-            console.log(category["name"]);
-        });
+        // console.log(categoryNameList);
+        // categoryNameList.forEach(category => {
+        //     console.log(category["name"]);
+        // });
         console.log("categoryList below:");
-        // console.log(categoryList);
+        console.log(categoryList);
     }
 
     return (
