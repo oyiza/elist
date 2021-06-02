@@ -10,7 +10,7 @@ const Category = () => {
 
     // data from firebase
     // const [categoryNameList, setcategoryNameList] = useState([]);
-    const [categoryList, setcategoryList] = useState([]);
+    const [categoryList, setCategoryList] = useState([]);
     const [categoryExists, setCategoryExists] = useState(false);
 
     // TODO: buttons don't work on the first click, and duplicate items get added to the db on first try
@@ -45,7 +45,7 @@ const Category = () => {
     };
 
     const updateCategoryLists = (e) => {
-        const categoryName = [];
+        const categoryList = [];
         const categoryNameAndId = [];
 
         db.collection('categories')
@@ -54,7 +54,7 @@ const Category = () => {
             snapshot.forEach(doc => {
                 const name = doc.data();
                 const id = doc.id;
-                categoryName.push(name);
+                categoryList.push(name);
                 const data = {"id": id, "name": name["name"]}
                 categoryNameAndId.push(data);
             });
@@ -66,19 +66,42 @@ const Category = () => {
         // console.log(categoryNameAndId);
 
         // setcategoryNameList(categoryName)
-        setcategoryList(categoryNameAndId)
+        setCategoryList(categoryNameAndId);
     };
 
-    const options = [
-        'sports', 'houses'
-    ]
+    const getCategories = (e) => {
+        // updateCategoryLists();
+        const options = []
+
+        categoryList.forEach(category => {
+            const data = category["name"];
+            options.push(data);
+            console.log(category["name"]);
+        });
+
+        return options;
+    }
+
+    const options = getCategories();
 
     const handleDeleteCategory = (e) => {
         e.preventDefault();
+        updateCategoryLists();
 
-        console.log("about to delete category: " + dropdownCategoryName);
-        // db.collection('categories')
-        //     .get()
+        const temp = categoryList.find(element => element["name"] === dropdownCategoryName);
+        if (temp !== undefined) {
+            console.log("about to delete category: " + dropdownCategoryName + " with id: " + temp["id"]);
+            const id = temp["id"];
+            db.collection('categories').doc(id).delete()
+            .then(() => {
+                alert('successfully deleted ' + dropdownCategoryName);
+            })
+            .catch((error) => {
+                alert(error.message);
+            });
+        } else {
+            console.log("selected category is undefined...")
+        }
     };
 
     const captureValue = (e) => {
