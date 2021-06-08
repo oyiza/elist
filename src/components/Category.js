@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
 import { db } from "../firebase";
@@ -9,9 +9,17 @@ const Category = () => {
     const [dropdownCategoryName, setdropdownCategoryName] = useState("");
 
     // data from firebase
-    // const [categoryNameList, setcategoryNameList] = useState([]);
+    const [categoryNameList, setcategoryNameList] = useState([]);
     const [categoryList, setCategoryList] = useState([]);
     const [categoryExists, setCategoryExists] = useState(false);
+
+    // https://www.pluralsight.com/guides/executing-promises-in-a-react-component
+    useEffect(() => {
+        const getCategories = async () => {
+            updateCategoryLists();
+        };
+        getCategories();
+    }, [])
 
     // TODO: buttons don't work on the first click, and duplicate items get added to the db on first try
     const handleSubmitCategoryForm = (e) => {
@@ -45,7 +53,7 @@ const Category = () => {
     };
 
     const updateCategoryLists = (e) => {
-        const categoryList = [];
+        const categoryList = ["select a category..."];
         const categoryNameAndId = [];
 
         db.collection('categories')
@@ -54,7 +62,7 @@ const Category = () => {
             snapshot.forEach(doc => {
                 const name = doc.data();
                 const id = doc.id;
-                categoryList.push(name);
+                categoryList.push(name["name"]);
                 const data = {"id": id, "name": name["name"]}
                 categoryNameAndId.push(data);
             });
@@ -64,28 +72,31 @@ const Category = () => {
         // DEBUG
         // console.log("categoryNameAndId below----");
         // console.log(categoryNameAndId);
+        // console.log("categoryList below----");
+        // console.log(categoryList);
 
-        // setcategoryNameList(categoryName)
+        setcategoryNameList(categoryList)
         setCategoryList(categoryNameAndId);
     };
 
-    const getCategories = (e) => {
-        // updateCategoryLists();
-        const options = []
+    // const getCategories = (e) => {
+    //     // updateCategoryLists();
+    //     const options = []
 
-        categoryList.forEach(category => {
-            const data = category["name"];
-            options.push(data);
-            console.log(category["name"]);
-        });
+    //     categoryList.forEach(category => {
+    //         const data = category["name"];
+    //         options.push(data);
+    //         console.log(category["name"]);
+    //     });
 
-        return options;
-    }
+    //     return options;
+    // }
 
-    const options = getCategories();
+    const options = [];
 
     const handleDeleteCategory = (e) => {
         e.preventDefault();
+        // TODO: maybe update cat list after deleting the item?
         updateCategoryLists();
 
         const temp = categoryList.find(element => element["name"] === dropdownCategoryName);
@@ -105,7 +116,7 @@ const Category = () => {
     };
 
     const captureValue = (e) => {
-        console.log(e.value);
+        // console.log(e.value);
         setdropdownCategoryName(e.value);
     };
 
@@ -120,8 +131,6 @@ const Category = () => {
         // categoryNameList.forEach(category => {
         //     console.log(category["name"]);
         // });
-        console.log("categoryList below:");
-        console.log(categoryList);
     }
 
     return (
@@ -135,7 +144,7 @@ const Category = () => {
             <button onClick={printCategories}>print categories to console</button>
 
             <h1>Delete A Category</h1>
-            <Dropdown options={options} onChange={captureValue} value={dropdownCategoryName} placeholder="Select a category" />
+            <Dropdown options={categoryNameList} onChange={captureValue} value={dropdownCategoryName} placeholder="select a category..." />
             <button onClick={handleDeleteCategory}>Delete</button>
         </form>
     )
