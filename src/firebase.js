@@ -1,5 +1,6 @@
 import firebase from 'firebase'
 
+// TODO: should this be in git or hidden?
 var firebaseApp = firebase.initializeApp({
     // Your web app's Firebase configuration
     apiKey: "AIzaSyBcErfAFrpORgul4Z3uVZi5Mp2-OGVgcBs",
