@@ -21,7 +21,7 @@ const Category = () => {
         getCategories();
     }, [])
 
-    // TODO: buttons don't work on the first click, and duplicate items get added to the db on first try
+    // TODO: prevent duplicate items being added to the db
     const handleSubmitCategoryForm = (e) => {
         e.preventDefault();
 
@@ -79,26 +79,12 @@ const Category = () => {
         setCategoryList(categoryNameAndId);
     };
 
-    // const getCategories = (e) => {
-    //     // updateCategoryLists();
-    //     const options = []
-
-    //     categoryList.forEach(category => {
-    //         const data = category["name"];
-    //         options.push(data);
-    //         console.log(category["name"]);
-    //     });
-
-    //     return options;
-    // }
-
-    const options = [];
-
     const handleDeleteCategory = (e) => {
         e.preventDefault();
-        // TODO: maybe update cat list after deleting the item?
+
         updateCategoryLists();
 
+        // TODO: change from alerts to displaying span message or something on successful add / delete category
         const temp = categoryList.find(element => element["name"] === dropdownCategoryName);
         if (temp !== undefined) {
             console.log("about to delete category: " + dropdownCategoryName + " with id: " + temp["id"]);
@@ -111,9 +97,17 @@ const Category = () => {
                 alert(error.message);
             });
         } else {
-            console.log("selected category is undefined...")
+            console.log("selected category is undefined...");
         }
+
+        // https://ej2.syncfusion.com/react/documentation/drop-down-list/how-to/clear-item/
+        setdropdownCategoryName(null);
     };
+
+    const handleDeleteCategoryV2 = async () => {
+        // alternate implementation of async delete that doesn't always work. it reloads the page though
+        // which might be a good thing but there's something off with it
+    }
 
     const captureValue = (e) => {
         // console.log(e.value);
@@ -146,6 +140,7 @@ const Category = () => {
             <h1>Delete A Category</h1>
             <Dropdown options={categoryNameList} onChange={captureValue} value={dropdownCategoryName} placeholder="select a category..." />
             <button onClick={handleDeleteCategory}>Delete</button>
+            {/* <button onClick={handleDeleteCategoryV2}>Delete (test)</button> */}
         </form>
     )
 }
