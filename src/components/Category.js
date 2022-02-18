@@ -6,6 +6,7 @@ import { db } from "../firebase";
 const Category = () => {
     // data from form
     const [categoryName, setCategoryName] = useState("");
+    const [entryName, setEntryName] = useState("");
     const [dropdownCategoryName, setdropdownCategoryName] = useState("");
 
     // data from firebase
@@ -127,21 +128,41 @@ const Category = () => {
         // });
     }
 
+    const handleSubmitEntry = (e) => {
+        e.preventDefault();
+        console.log('HANDLESUBMITCATEGORY');
+    }
+
     return (
-        <form className="form">
-            <h1>Create A Category</h1>
+        <>  
+            <form className="categoryForm">
+                <h1>Create A Category</h1>
 
-            <label>Category Name </label>
-            <input placeholder="category name" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} />
+                <label>Category Name </label>
+                <input placeholder="category name" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} />
 
-            <button onClick={handleSubmitCategoryForm}>Submit</button>
-            <button onClick={printCategories}>print categories to console</button>
+                <button onClick={handleSubmitCategoryForm}>Submit</button>
+                <button onClick={printCategories}>print categories to console</button>
 
-            <h1>Delete A Category</h1>
-            <Dropdown options={categoryNameList} onChange={captureValue} value={dropdownCategoryName} placeholder="select a category..." />
-            <button onClick={handleDeleteCategory}>Delete</button>
-            {/* <button onClick={handleDeleteCategoryV2}>Delete (test)</button> */}
-        </form>
+                <h1>Delete A Category</h1>
+                <Dropdown options={categoryNameList} onChange={captureValue} value={dropdownCategoryName} placeholder="select a category..." />
+                <button onClick={handleDeleteCategory}>Delete</button>
+                {/* <button onClick={handleDeleteCategoryV2}>Delete (test)</button> */}
+            </form>
+            
+            <form className="entryForm">
+                <h1>Make a category entry</h1>
+
+                <label>Select a category: </label>
+                <Dropdown options={categoryNameList} onChange={captureValue} value={dropdownCategoryName} placeholder="select a category..." />
+
+                <label>Make a new entry: </label>
+                {/* TODO: make this work with the whole form shenanigans... similar to category name input */}
+                <input placeholder="type something" value={entryName} onChange={(e) => setEntryName(e.target.value)} />
+
+                <button onClick={handleSubmitEntry}>Submit</button>
+            </form>
+        </>
     )
 }
 
