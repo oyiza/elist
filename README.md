@@ -15,3 +15,14 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+## my notes
+
+#### updating dependencies
+- according to https://stackoverflow.com/questions/16073603/how-to-update-each-dependency-in-package-json-to-the-latest-version#16074029
+`npm outdated` to see a list of outdated dependencies
+`npx npm-check-updates -u` to fetch updates?
+`npm install` to install them?
