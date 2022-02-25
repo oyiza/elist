@@ -1,10 +1,12 @@
-import firebase from 'firebase'
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 
 // TODO: should this be in git or hidden?
 // youtube tutorial in case i want authentication enabled
 // https://www.youtube.com/watch?v=O5QxNn6ET5c&ab_channel=TheNetNinja
 // or the video here: https://firebase.google.com/docs/database/security
-var firebaseApp = firebase.initializeApp({
+const firebaseApp = firebase.initializeApp({
     // Your web app's Firebase configuration
     apiKey: "AIzaSyBcErfAFrpORgul4Z3uVZi5Mp2-OGVgcBs",
     authDomain: "elist-e51fd.firebaseapp.com",
@@ -14,6 +16,6 @@ var firebaseApp = firebase.initializeApp({
     appId: "1:626657173070:web:51fd7cd72285d812bfed1f",
 });
 
-var db = firebaseApp.firestore();
+const db = firebaseApp.firestore();
 
 export { db };
